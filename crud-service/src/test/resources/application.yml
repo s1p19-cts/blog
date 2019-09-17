@@ -1,0 +1,44 @@
+---
+config:
+  name: blog-crud-service
+  info: Blog JPA Demo App
+  region: test
+
+# 'test' profile
+spring:
+  profiles:
+    active: test
+
+  datasource:
+    # h2 (used for testing only)
+    driver-class-name: org.h2.Driver
+    initialization-mode: embedded
+    platform: h2
+    # to run test against the mixed mode file-based H2
+    # url: jdbc:h2:./h2/db:demo;;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    # in memory schema used for testing only
+    url: jdbc:h2:mem:demo;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;IFEXISTS=FALSE;
+
+  jpa:
+    hiberante:
+      dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: none
+    generate-ddl: false
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+security:
+  basic:
+    enabled: false
+  enable-csrf: true
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+    com.cts: DEBUG

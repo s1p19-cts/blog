@@ -1,0 +1,102 @@
+---
+config:
+  name: blog-crud-service
+  info: Blog JPA Demo App
+  region: central
+
+# applies to all
+spring:
+  application:
+    name: blog-crud-service
+  resources:
+    static-locations: classpath:/
+
+endpoints:
+  restart:
+    enabled: true
+
+# allow access to all actuator endpoints
+management:
+  security:
+    enabled: false
+  server:
+    port: {PORT:8001}
+    address: 127.0.0.1
+
+  # Spring boot 2
+  # show all actuator endpoints (only for POC)
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+    com.cts: DEBUG
+
+# run only for `default` profile, i.e. running locally, security is disabled
+# enable for cloud or prod profiles.
+security:
+  basic:
+    enabled: false
+  ignored: /swagger-resources/**
+
+
+#
+# 'default' profile settings
+# These settings are only used when running locally either as a standalone or junit testing.
+# DO NOT USE THESE SETTINGS FOR CLOUD PROFILE.
+---
+spring:
+  profiles: default
+
+  # for local testing, do we need config server???
+  cloud:
+    config:
+      enabled: false
+
+  datasource:
+    # h2 (used for testing only)
+    # ;AUTO_SERVER=TRUE allows it run in Mixed mode
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:../h2/db:demo;;MODE=Oracle;DB_CLOSE_ON_EXIT=FALSE;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+
+    # local <mysql> instance
+    # url: jdbc:mysql://localhost:3306/demo
+    # driver-class-name: com.mysql.jdbc.Driver
+    # username: root
+    # password:
+
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: none
+    generate-ddl: false
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+# 'cloud' profile
+# These settings are used on PCF only.
+# DO NOT SET ANYTHING HERE.
+# All settings are leveraged from the config server
+---
+spring:
+  profiles: cloud
+  cloud:
+    config:
+      enabled: true
+
+# for `cloud` profile security is disabled for testing only
+security:
+  basic:
+    enabled: false
+
+
