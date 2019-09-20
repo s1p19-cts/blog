@@ -1,0 +1,76 @@
+---
+config:
+  name: blogreader
+  info: Blog Reader App
+  region: central
+
+blog:
+  primary:
+    endpoint: "http://localhost:8080"
+  secondary:
+    endpoint: "http://localhost:8090"
+
+# applies to all
+spring:
+  application:
+    name: blogreader-service
+  cloud:
+    config:
+      enabled: false
+  resources:
+    static-locations: classpath:/
+
+endpoints:
+  restart:
+    enabled: true
+
+# allow access to all actuator endpoints
+management:
+  security:
+    enabled: false
+  server:
+    port: {PORT:0}
+    address: 127.0.0.1
+
+  # Spring boot 2
+  # show all actuator endpoints (only for POC)
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: DEBUG
+    com.netflix: INFO
+    com.cts: DEBUG
+
+# run only for `default` profile, i.e. running locally, security is disabled
+# enable for cloud or prod profiles.
+security:
+  basic:
+    enabled: false
+  ignored: /swagger-resources/**
+
+
+#
+# 'default' profile settings
+# These settings are only used when running locally either as a standalone or junit testing.
+# DO NOT USE THESE SETTINGS FOR CLOUD PROFILE.
+---
+spring:
+  profiles: default
+
+
+# 'cloud' profile
+# These settings are used on PCF only.
+# DO NOT SET ANYTHING HERE.
+# All settings are leveraged from the config server
+---
+spring:
+  profiles: cloud
+  cloud:
+    config:
+      enabled: true
