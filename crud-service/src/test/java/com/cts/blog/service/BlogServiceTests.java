@@ -10,22 +10,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:schema-h2.sql")
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data-h2.sql")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = {"management.port=0"})
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:test-schema-h2.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:test-data-h2.sql")
 public class BlogServiceTests {
 	private static final Logger log = LoggerFactory.getLogger(BlogService.class);
 
 	@Autowired
 	BlogService blogService;
 
-	@Rule public TestName name = new TestName();
+	@Rule
+	public TestName name = new TestName();
 
 	@Test
 	public void contextLoads() {
@@ -38,7 +41,10 @@ public class BlogServiceTests {
 	public void testGetInfo() {
 		log.info("..... (-) {}", name.getMethodName());
 		Assertions.assertNotNull(blogService, "service instance auto wire failed ");
-		log.info("... " + blogService.getInfo());
+		String greeting = blogService.getInfo();
+		Assertions.assertNotNull(greeting);
+		Assertions.assertTrue(greeting.contains("'blog-crud-service' is running"));
+		log.info("... " + greeting);
 	}
 
 	@Test

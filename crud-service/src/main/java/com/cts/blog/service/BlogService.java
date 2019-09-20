@@ -33,7 +33,7 @@ public class BlogService {
 		return buf.toString();
 	}
 
-	public Iterable<Blog> findAll(){
+	public Iterable<Blog> findAll() {
 		Iterable<Blog> blogs = blogRepository.findAll();
 		log.info(" findAll returned - {} rows", blogRepository.count());
 		return blogs;
@@ -45,7 +45,7 @@ public class BlogService {
 
 	public Blog findById(long id) {
 		log.debug(" ... searching for {}", id);
-		Optional<Blog> blog =  blogRepository.findById(id);
+		Optional<Blog> blog = blogRepository.findById(id);
 		return blog.isPresent() ? blog.get() : null;
 	}
 

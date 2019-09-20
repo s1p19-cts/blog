@@ -15,59 +15,69 @@ import java.util.Map;
 @RestController
 public class BlogController {
 
-    private static final Logger log = LoggerFactory.getLogger(BlogController.class);
+	private static final Logger log = LoggerFactory.getLogger(BlogController.class);
 
-    @Autowired
-    private BlogService blogService;
+	@Autowired
+	private BlogService blogService;
 
-    @RequestMapping("/")
-    public ResponseEntity<String> greeting() {
-        return new ResponseEntity<String>(blogService.getInfo(), HttpStatus.OK);
-    }
+	@RequestMapping("/")
+	public ResponseEntity<String> info() {
+		return new ResponseEntity<String>(blogService.getInfo(), HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/blogs", method= RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Iterable<Blog>> index(){
-        return new ResponseEntity<Iterable<Blog>>(blogService.findAll(), HttpStatus.OK);
-    }
+	@RequestMapping("/greeting")
+	public String greeting() {
+		return "Hello earthling!\n";
+	}
 
-    @GetMapping("/blog/{id}")
-    @ResponseBody
-    public ResponseEntity<Blog> show(@PathVariable String id){
-        log.debug(" ... searching for {}", id);
-        Blog blog = blogService.findById(id);
-        if (blog == null) {
-            return new ResponseEntity<Blog>(blog, HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<Blog>(blog, HttpStatus.OK);
-        }
-    }
+	@RequestMapping("/greeting/{name}")
+	public String greeting(@PathVariable("name") String name) {
+		return String.format("Hello %s!\n", name);
+	}
 
-    @PostMapping("/blog/search")
-    @ResponseBody
-    public List<Blog> search(@RequestBody Map<String, String> body){
-        String searchTerm = body.get("text");
-        return blogService.search(searchTerm);
-    }
+	@RequestMapping(value = "/blogs", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Iterable<Blog>> index() {
+		return new ResponseEntity<Iterable<Blog>>(blogService.findAll(), HttpStatus.OK);
+	}
 
-    @PostMapping("/blog")
-    @ResponseBody
-    public Blog create(@RequestBody Map<String, String> body){
-        String title = body.get("title");
-        String content = body.get("content");
-        return blogService.create(title, content);
-    }
+	@GetMapping("/blog/{id}")
+	@ResponseBody
+	public ResponseEntity<Blog> show(@PathVariable String id) {
+		log.debug(" ... searching for {}", id);
+		Blog blog = blogService.findById(id);
+		if (blog == null) {
+			return new ResponseEntity<Blog>(blog, HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<Blog>(blog, HttpStatus.OK);
+		}
+	}
 
-    @PutMapping("/blog/{id}")
-    @ResponseBody
-    public Blog update(@PathVariable String id, @RequestBody Map<String, String> body){
-        return blogService.update(id, body.get("title"), body.get("content"));
-    }
+	@PostMapping("/blog/search")
+	@ResponseBody
+	public List<Blog> search(@RequestBody Map<String, String> body) {
+		String searchTerm = body.get("text");
+		return blogService.search(searchTerm);
+	}
 
-    @DeleteMapping("blog/{id}")
-    @ResponseBody
-    public boolean delete(@PathVariable String id){
-        blogService.delete(id);
-        return true;
-    }
+	@PostMapping("/blog")
+	@ResponseBody
+	public Blog create(@RequestBody Map<String, String> body) {
+		String title = body.get("title");
+		String content = body.get("content");
+		return blogService.create(title, content);
+	}
+
+	@PutMapping("/blog/{id}")
+	@ResponseBody
+	public Blog update(@PathVariable String id, @RequestBody Map<String, String> body) {
+		return blogService.update(id, body.get("title"), body.get("content"));
+	}
+
+	@DeleteMapping("blog/{id}")
+	@ResponseBody
+	public boolean delete(@PathVariable String id) {
+		blogService.delete(id);
+		return true;
+	}
 }

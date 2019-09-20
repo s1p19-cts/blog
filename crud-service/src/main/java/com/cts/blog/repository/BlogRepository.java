@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface BlogRepository extends CrudRepository<Blog, Long> {
 
-    List<Blog> findByTitleContainingOrContentContaining(String text, String textAgain);
+	List<Blog> findByTitleContainingOrContentContaining(String text, String textAgain);
 
 }
