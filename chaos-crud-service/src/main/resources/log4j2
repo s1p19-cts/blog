@@ -1,0 +1,25 @@
+Configuration:
+  name: Default
+  status: warn
+
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%d [trace=%X{X-Trace-Id:-},span=%X{X-Span-Id:-},%t] %highlight{%-5level} -- %c{1.}: %msg%n"
+      #PatternLayout:
+      #  pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: Console
+
+    Logger:
+      - name: com.sakx.developer.demo
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: Console
