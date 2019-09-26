@@ -63,7 +63,7 @@ spring:
     # h2 (used for testing only)
     # ;AUTO_SERVER=TRUE allows it run in Mixed mode
     driverClassName: org.h2.Driver
-    url: jdbc:h2:../h2/db:demo;;MODE=Oracle;DB_CLOSE_ON_EXIT=FALSE;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    url: jdbc:h2:../h2/db/demo;;MODE=Oracle;DB_CLOSE_ON_EXIT=FALSE;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
 
     # local <mysql> instance
     # url: jdbc:mysql://localhost:3306/demo
