@@ -42,23 +42,33 @@ public class BlogreaderService {
 						       String.class, username);
 	}
 
+	public Iterable getBlogs() {
+		return getBlogsFromEndpoint(configs.getPrimaryEndpoint());
+	}
+
+	public Map getBlogById(String id) {
+		return getBlogFromEndpointById(configs.getPrimaryEndpoint(), id);
+	}
+
 	/**
 	 * Get blogs from the given endpoitn
 	 *
 	 * @return
 	 */
-	public Iterable getBlogs() {
+	private Iterable getBlogsFromEndpoint(String endpoint) {
 		Iterable blogs = null;
 
-		RestTemplate restTemplate = new RestTemplate();
-		log.info(" ... initiated restTemplate - {}", restTemplate);
-		ResponseEntity<Iterable<Map>> response = restTemplate.exchange(
-				configs.getPrimaryEndpoint() + "/blogs",
-				HttpMethod.GET,
-				null,
-				new ParameterizedTypeReference<Iterable<Map>>() {
-				});
-		blogs = response.getBody();
+//		if (StringUtils.isBlank(endpoint) == false) {
+			RestTemplate restTemplate = new RestTemplate();
+			log.info(" ... initiated restTemplate - {}", restTemplate);
+			ResponseEntity<Iterable<Map>> response = restTemplate.exchange(
+					endpoint + "/blogs",
+					HttpMethod.GET,
+					null,
+					new ParameterizedTypeReference<Iterable<Map>>() {
+					});
+			blogs = response.getBody();
+//		}
 		return blogs;
 	}
 
@@ -68,26 +78,28 @@ public class BlogreaderService {
 	 * @param id
 	 * @return
 	 */
-	public Map getBlogById(String id) {
+	private Map getBlogFromEndpointById(String endpoint, String id) {
 		Map blog = null;
 
-		RestTemplate restTemplate = new RestTemplate();
-		log.info(" ... initiated restTemplate - {}", restTemplate);
+//		if (StringUtils.isBlank(endpoint) == false) {
+			RestTemplate restTemplate = new RestTemplate();
+			log.info(" ... initiated restTemplate - {}", restTemplate);
 
-		//		HttpHeaders headers = new HttpHeaders();
-		//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		//		HttpEntity<String> entity = new HttpEntity<>(headers);
+			//		HttpHeaders headers = new HttpHeaders();
+			//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			//		HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("id", id);
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("id", id);
 
-		ResponseEntity<Map> response = restTemplate.exchange(
-				configs.getPrimaryEndpoint() + "/blog/{id}",
-				HttpMethod.GET,
-				null,
-				new ParameterizedTypeReference<Map>() {
-				}, params);
-		blog = response.getBody();
+			ResponseEntity<Map> response = restTemplate.exchange(
+					endpoint + "/blog/{id}",
+					HttpMethod.GET,
+					null,
+					new ParameterizedTypeReference<Map>() {
+					}, params);
+			blog = response.getBody();
+//		}
 		return blog;
 	}
 }

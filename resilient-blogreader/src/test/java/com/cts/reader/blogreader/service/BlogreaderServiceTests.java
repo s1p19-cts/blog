@@ -58,13 +58,13 @@ public class BlogreaderServiceTests {
 		));
 	}
 
-//	@Test
-//	public void testFindById() {
-//		log.info("..... (-) {}", name.getMethodName());
-//		String id = "1";
-//		Iterable<Map> blog = blogReader.getBlogById(id);
-//		Assertions.assertNotNull(blog, "failed to get blog for id - " + id);
-//		log.info("... blog is - {}", blog);
-//	}
+	@Test
+	public void testFindById() {
+		log.info("..... (-) {}", name.getMethodName());
+		String id = "1";
+		Map blog = blogReader.getBlogById(id);
+		Assertions.assertNotNull(blog, "failed to get blog for id - " + id);
+		log.info("... blog is - {}", blog);
+	}
 
 }

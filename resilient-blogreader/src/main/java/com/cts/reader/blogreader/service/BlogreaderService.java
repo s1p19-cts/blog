@@ -42,7 +42,7 @@ public class BlogreaderService {
 	@HystrixCommand(fallbackMethod = "defaultGreeting")
 	public String getGreeting(String username) {
 		return new RestTemplate()
-				       .getForObject("http://127.0.0.1:4444/greeting/{username}",
+				       .getForObject(configs.getPrimaryEndpoint() + "/greeting/{username}",
 						       String.class, username);
 	}
 
@@ -57,12 +57,12 @@ public class BlogreaderService {
 	}
 
 	@HystrixCommand(fallbackMethod = "getBlogSecondaryById")
-	public Iterable<Map> getBlogById(String id) {
+	public Map getBlogById(String id) {
 		return getBlogFromEndpointById(configs.getPrimaryEndpoint(), id);
 	}
 
-	@HystrixCommand(fallbackMethod = "defaultNotAvailable")
-	public Iterable<Map> getBlogSecondaryById(String id) {
+	@HystrixCommand(fallbackMethod = "defaultNotFound")
+	public Map getBlogSecondaryById(String id) {
 		return getBlogFromEndpointById(configs.getSecondaryEndpoint(), id);
 	}
 
@@ -96,9 +96,9 @@ public class BlogreaderService {
 	 * @param id
 	 * @return
 	 */
-	private Iterable getBlogFromEndpointById(String endpoint, String id) {
+	private Map getBlogFromEndpointById(String endpoint, String id) {
 
-		Iterable blog = null;
+		Map blog = null;
 
 		if (StringUtils.isBlank(endpoint) == false) {
 			RestTemplate restTemplate = new RestTemplate();
@@ -111,11 +111,11 @@ public class BlogreaderService {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("id", id);
 
-			ResponseEntity<Iterable> response = restTemplate.exchange(
+			ResponseEntity<Map> response = restTemplate.exchange(
 					endpoint + "/blog/{id}",
 					HttpMethod.GET,
 					null,
-					new ParameterizedTypeReference<Iterable>() {
+					new ParameterizedTypeReference<Map>() {
 					}, params);
 			blog = response.getBody();
 		}
@@ -128,12 +128,12 @@ public class BlogreaderService {
 	}
 
 	// return a default message
-	private Map<String, String> defaultNotFound() {
+	private Map defaultNotFound() {
 		return defaultNotFound("No server available to get blog(s)!");
 	}
 
 	// return a default message
-	private Map<String, String> defaultNotFound(String msg) {
+	private Map defaultNotFound(String msg) {
 		Map<String, String> amap = new HashMap<String, String>();
 		amap.put("500", msg);
 		return amap;

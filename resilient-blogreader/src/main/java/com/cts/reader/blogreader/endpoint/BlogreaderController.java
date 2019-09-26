@@ -34,13 +34,13 @@ public class BlogreaderController {
 
 	@GetMapping("/blog/{id}")
 	@ResponseBody
-	public ResponseEntity<Iterable<Map>> show(@PathVariable String id) {
+	public ResponseEntity<Map> show(@PathVariable String id) {
 		log.debug(" ... searching for {}", id);
-		Iterable<Map> blog = readerService.getBlogById(id);
-		if (StreamSupport.stream(blog.spliterator(), false).count() <= 0) {
-			return new ResponseEntity<Iterable<Map>>(blog, HttpStatus.NOT_FOUND);
+		Map blog = readerService.getBlogById(id);
+		if (blog == null || blog.isEmpty()) {
+			return new ResponseEntity<Map>(blog, HttpStatus.NOT_FOUND);
 		} else {
-			return new ResponseEntity<Iterable<Map>>(blog, HttpStatus.OK);
+			return new ResponseEntity<Map>(blog, HttpStatus.OK);
 		}
 	}
 
