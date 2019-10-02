@@ -63,6 +63,14 @@ security:
 spring:
   profiles: default
 
+# add wait time of 100ms for hystrix.
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 100
 
 # 'cloud' profile
 # These settings are used on PCF only.
