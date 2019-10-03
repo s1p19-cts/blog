@@ -46,7 +46,7 @@ public class BlogreaderServiceTests {
 		Assertions.assertNotNull(blogReader, "service instance auto wire failed ");
 		String greeting = blogReader.getGreeting("homer");
 		Assertions.assertNotNull(greeting);
-		Assertions.assertTrue(greeting.contains("Hello homer"));
+		Assertions.assertTrue(greeting.contains("Hello"));
 		log.info("... " + greeting);
 	}
 
